@@ -1,0 +1,16 @@
+version: '2'
+services:
+    appinventory-mongodb:
+        image: mongo:4.0.2
+        ports:
+            - "27017:27017"
+        command: mongos --configdb appinventory-mongodb-config
+    appinventory-mongodb-node:
+        build:
+            context: .
+            dockerfile: mongodb/MongoDB.Dockerfile
+        command: mongod --replSet rs1 --noprealloc --smallfiles
+    appinventory-mongodb-config:
+        image: mongo:4.0.2
+        container_name: appinventory-mongodb-config
+        command: mongod --noprealloc --smallfiles --configsvr --dbpath /data/db
